@@ -1,7 +1,9 @@
 <template>
-  <div>
-    <input id="description" v-model="text" placeholder="Enter text" />
-    <p>{{ message }}</p>
+  <div class="flex flex-col justify-center items-center">
+    <input id="description" v-model="text"
+           placeholder="Enter text" type="text"
+           class="form-input rounded-lg"/>
+    <p class="mt-4 text-sky-700">{{ isBalanced() }}</p>
   </div>
 </template>
 
@@ -10,7 +12,7 @@ import {computed, ref} from 'vue';
 
 const text = ref('');
 
-const isBalanced = (inputText) => {
+const checkBalanced = (inputText) => {
   const brackets = {
     '(': ')',
     '[': ']',
@@ -27,12 +29,13 @@ const isBalanced = (inputText) => {
       }
     }
   }
-  console.log('final:', stack);
 
   return stack.length === 0;
 };
 
-const message = computed(() => isBalanced(text.value) ? 'The text is balanced.' : 'The text is not balanced.')
+const isBalanced = () => checkBalanced(text.value) ? 'The text is balanced.' : 'The text is not balanced.'
+
+// const isBalanced = computed(() => checkBalanced(text.value) ? 'The text is balanced.' : 'The text is not balanced.')
 
 </script>
 
