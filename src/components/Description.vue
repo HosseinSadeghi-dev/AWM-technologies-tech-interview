@@ -3,40 +3,57 @@
     <input id="description" v-model="text"
            placeholder="Enter text" type="text"
            class="form-input rounded-lg"/>
-    <p class="mt-4 text-sky-700">{{ isBalanced() }}</p>
+    <p class="mt-4 text-sky-700">{{ statusText }}</p>
   </div>
 </template>
 
-<script setup>
-import {computed, ref} from 'vue';
+<script>
 
-const text = ref('');
+import {defineComponent} from "vue";
 
-const checkBalanced = (inputText) => {
-  const brackets = {
-    '(': ')',
-    '[': ']',
-    '{': '}'
-  };
-  const stack = [];
+export default defineComponent({
+  name: "description",
+  data() {
+    return {
+      text: '',
+      statusText: '',
+      debounceTimer: null
+    }
+  },
+  watch: {
+    text() {
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = setTimeout(() => {
+        this.isBalanced();
+      }, 200);
+    }
+  },
+  methods: {
+    checkBalanced(inputText) {
+      const brackets = {
+        '(': ')',
+        '[': ']',
+        '{': '}'
+      };
+      const stack = [];
 
-  for (let char of inputText) {
-    if (brackets[char]) {
-      stack.push(brackets[char]);
-    } else if (Object.values(brackets).includes(char)) {
-      if (!stack.length || stack.pop() !== char) {
-        return false;
+      for (let char of inputText) {
+        if (brackets[char]) {
+          stack.push(brackets[char]);
+        } else if (Object.values(brackets).includes(char)) {
+          if (!stack.length || stack.pop() !== char) {
+            return false;
+          }
+        }
       }
+
+      return stack.length === 0;
+    },
+    isBalanced() {
+      this.statusText = this.checkBalanced(this.text) ? 'The text is balanced.' : 'The text is not balanced.'
     }
   }
-
-  return stack.length === 0;
-};
-
-const isBalanced = () => checkBalanced(text.value) ? 'The text is balanced.' : 'The text is not balanced.'
-
-// const isBalanced = computed(() => checkBalanced(text.value) ? 'The text is balanced.' : 'The text is not balanced.')
-
+});
 </script>
 
 <style scoped>
