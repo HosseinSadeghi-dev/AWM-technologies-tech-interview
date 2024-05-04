@@ -10,7 +10,7 @@
 
     <div v-else-if="step === 2" class="flex flex-col justify-start items-stretch gap-y-2">
       <label for="email">Email:</label>
-      <input id="email" name="email" v-model="email" @input="validateEmail" type="email"
+      <input id="email" name="email" v-model="email" @input="validateEmail" type="text"
              class="form-input rounded-lg">
       <div v-if="emailError" class="text-red-600">{{ emailError }}</div>
     </div>
@@ -54,7 +54,6 @@ const validateUsername = () => {
 };
 
 const validateEmail = () => {
-  debugger
   if (!email.value || !/^\S+@\S+\.\S+$/.test(email.value)) {
     emailError.value = 'Invalid email address.';
     return false;
